@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
+import contactsActions from '../../redux/contacts/contacts-actions';
 import s from './ContactForm.module.css';
 
 const INITIAL_STATE = {
@@ -7,8 +9,9 @@ const INITIAL_STATE = {
   number: '',
 };
 
-function ContactForm({onSubmit}) {
+function ContactForm() {
   const [contact, setContact] = useState(INITIAL_STATE);
+  const dispatch = useDispatch();
 
   const handleChange = ({ target }) => {
     const { name, value } = target;
@@ -20,7 +23,7 @@ function ContactForm({onSubmit}) {
 
   const handleSubmit = e => {
     e.preventDefault();
-    onSubmit(contact);
+    dispatch(contactsActions.addContact(contact));
     reset();
   };
 
@@ -60,7 +63,6 @@ function ContactForm({onSubmit}) {
     </form>
   );
 }
-
 
 ContactForm.propTypes = {
   target: PropTypes.shape({

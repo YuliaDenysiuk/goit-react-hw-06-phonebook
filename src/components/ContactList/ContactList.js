@@ -1,8 +1,20 @@
 import React from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
+import contactsActions from '../../redux/contacts/contacts-actions';
 import s from './ContactList.module.css';
 
-function ContactList({ contacts, onDeleteContact }) { 
+const getFilteredContacts = (contacts, filter) => {
+  const normalizedFilter = filter.toLowerCase();
+  return contacts.filter(contact => contact.name.toLowerCase().includes(normalizedFilter));
+}
+
+function ContactList() { 
+  const contacts = useSelector(({contacts: {items, filter}}) => getFilteredContacts(items, filter));
+  const dispatch = useDispatch();
+
+  const onDeleteContact = id => (dispatch(contactsActions.deleteContact(id)));
+
   return (
     <ul className={s.contacts}>
       {contacts.map(({ id, name, number }) => (
@@ -23,7 +35,6 @@ ContactList.propTypes = {
       number: PropTypes.string.isRequired,
     }),
   ),
-  onDeleteContact: PropTypes.func.isRequired,
 };
 
 export default ContactList;
